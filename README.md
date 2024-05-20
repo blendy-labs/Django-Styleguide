@@ -97,7 +97,7 @@ This is the Django Styleguide, created by us, the folks at [HackSoft](https://ha
 1. It's pragmatic. All things mentioned here are things tested in production.
 1. It's opinionated. This is how we build applications with Django.
 1. It's not the only way. There are other ways of building & structuring Django projects that can do the job for you.
-1. We have a [`Django-Styleguide-Example`](https://github.com/HackSoftware/Styleguide-Example) to show most of the styleguide in an actual project.
+1. We have a [`Django-Styleguide-Example`](https://github.com/HackSoftware/Django-Styleguide-Example) to show most of the styleguide in an actual project.
 
 **You can watch Radoslav Georgiev's [Django structure for scale and longevity](https://www.youtube.com/watch?v=yG3ZdxBb1oo) for the philosophy behind the styleguide:**
 
@@ -220,8 +220,6 @@ Models should take care of the data model and not much else.
 It's a good idea to define a `BaseModel`, that you can inherit.
 
 Usually, fields like `created_at` and `updated_at` are perfect candidates to go into a `BaseModel`.
-
-Defining a primary key can also go there. Potential candidate for that is the [`UUIDField`](https://docs.djangoproject.com/en/dev/ref/models/fields/#uuidfield)
 
 Here's an example `BaseModel`:
 
@@ -1269,7 +1267,7 @@ class Serializer(serializers.Serializer):
     })
 ```
 
-The implementation of `inline_serializer` can be found [here](https://github.com/HackSoftware/Styleguide-Example/blob/master/styleguide_example/common/utils.py#L34), in the [Styleguide-Example](https://github.com/HackSoftware/Styleguide-Example) repo.
+The implementation of `inline_serializer` can be found [here](https://github.com/HackSoftware/Django-Styleguide-Example/blob/master/styleguide_example/api/utils.py), in the [Styleguide-Example](https://github.com/HackSoftware/Styleguide-Example) repo.
 
 ### Advanced serialization
 
@@ -1512,9 +1510,11 @@ from config.settings.sentry import *  # noqa
 
 ### Prefixing environment variables with `DJANGO_`
 
-In a lot of examples, you'll see that environment variables are usually prefixed with `DJANGO_`. This is very helpful when there are other applications running alongside your Django app & reading from the same environment.
+In a lot of examples, you'll see that environment variables are usually prefixed with `DJANGO_`. This is very helpful when there are other applications alongside your Django app that run on the same environment. In that case, prefixing the environment variables with `DJANGO_` helps you to differ which are the environment variables specific to your Django app.
 
-We tend to prefix with `DJANGO_` only `DJANGO_SETTINGS_MODULE` and `DJANGO_DEBUG` & not prefix anything else.
+In HackSoft we do not ususally have several apps running on the same environment. So, we tend to prefix with `DJANGO_` only the Django specific environments & anything else.
+
+For example, we would have `DJANGO_SETTINGS_MODULE`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CORS_ORIGIN_WHITELIST` prefixed. We would have `AWS_SECRET_KEY`, `CELERY_BROKER_URL`, `EMAILS_ENABLED` not prefixed.
 
 This is mostly up to personal preference. **Just make sure you are consistent with that.**
 
@@ -2450,7 +2450,7 @@ We use [Celery](http://www.celeryproject.org/) for the following general cases:
 
 We try to treat Celery as if it's just another interface to our core logic - meaning - **don't put business logic there.**
 
-Lets look at an example of a **service** that sends emails (example taken from [`Django-Styleguide-Example`](https://github.com/HackSoftware/Django-Styleguide))
+Lets look at an example of a **service** that sends emails (example taken from [`Django-Styleguide-Example`](https://github.com/HackSoftware/Django-Styleguide-Example/blob/master/styleguide_example/emails/tasks.py))
 
 ```python
 from django.db import transaction
